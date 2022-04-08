@@ -1,0 +1,359 @@
+<%- include('partials/_headergravatas') %>
+
+<div class="container-fluid mt-4" >
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Lembre-se!</strong> Antes de excluir uma peça, exclua antes da locação se tiver.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+  <div class="row">
+    <div class="col-md-12">
+      <button class="btn btn-primary" data-toggle="modal" data-target="#add_gravatas">Novo gravata</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+
+      <h1 class="text-center">gravatas</h1>
+      <table class="table table-bordered table-hover">
+        <thead class="table-dark bg-primary">
+          <tr>
+            <td class="text-center"><i class="fas fa-id-card"></i> Código</td>
+            <td class="text-center"><i class="fas fa-image"></i> Foto</td>
+            <td class="text-center"><i class="fas fa-sort-numeric-up"></i> Tamanho</td>
+            <td class="text-center"><i class="fas fa-money-bill-alt"></i> Valor do Aluguel</td>
+            <td class="text-center"><i class="fas fa-money-bill-alt"></i> Valor de Compra</td>
+            <td class="text-center"><i class="fas fa-paint-brush"></i>Cor</td>
+            <td class="text-center"><i class="fas fa-clipboard-list"></i> Status</td>
+            <td class="text-center"><i class="fas fa-edit"></i> Ações</td>
+          </tr>
+        </thead>
+        <tbody id="gravatas">
+        </tbody>
+      </table>
+
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary btn-lg btn-block" id="load">Carregar mais</button>
+        </div>
+      </div>
+
+      <div class="modal fade" id="add_gravatas" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header ">
+              <h5 class="modal-title text-center">Adicionar novo gravata</h5>
+            </div>
+            <div class="modal-body">
+              <form action="/gravatas/add" method="POST" id="form_gravatas" style="border-style:solid; padding: 5%;">
+
+                <div class="form-group">
+                  <label for="nome">Código:</label>
+                  <input type="text" name="codigo" placeholder="Digite o código" class="form-control" autofocus
+                    required>
+                  <input type="hidden" value="gravata" name="tipo">
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-image"></i>
+                  <label for="endereço">Foto:</label>
+                  <input type="file" name="foto" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-paint-brush"></i>
+                  <label for="endereço">Cor:</label>
+                  <input type="text" name="cor" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-money-bill-alt"></i>
+                  <label for="valor_aluguel">Valor de Aluguel</label>
+                  <class class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+
+                    <input type="number" name="valor_aluguel" placeholder="Digite o valor de aluguel"
+                      class="form-control" required>
+                  </class>
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-money-bill-alt"></i>
+                  <label for="valor_aluguel">Valor de Compra</label>
+                  <class class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+                    <input type="number" name="valor_compra" placeholder="Digite o valor de compra" class="form-control"
+                      required>
+                  </class>
+                </div>
+
+                <div class="form-group">
+                  <i class="fas fa-sort-numeric-up"></i>
+                  <label for="tamanho">Tamanho:</label>
+                  <input type="number" name="tamanho" placeholder="Tamanho da gravata" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-clipboard-list"></i>
+                  <label for="cars">Status:</label>
+                  <select class="form-control" name="status" id="status">
+                    <option value="disponível" <%=  addGravatasModal.status == 'disponível' ? 'selected' : ''%>>
+                      disponível</option>
+                    <option value="alugado" <%=  addGravatasModal.status == 'alugado' ? 'selected' : ''%>>alugado
+                    </option>
+                    <option value="lavanderia" <%=  addGravatasModal.status == 'lavanderia' ? 'selected' : ''%>>
+                      lavanderia</option>
+                    <option value="vendido" <%=  addGravatasModal.status == 'vendido' ? 'selected' : ''%>>vendido
+                    </option>
+                    <option value="true" <%=  addGravatasModal.status == 'promoção' ? 'selected' : ''%>>promoção
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <i class="fas fa-money-bill-alt"></i>
+                  <label for="valor_aluguel">Valor de Promoção</label>
+                  <class class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">R$</span>
+                    </div>
+                    <input type="number" name="valor_promocao" placeholder="Digite o valor de promoção" class="form-control" required >
+                  </class>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success btn-block"><i class="fas fa-save"></i> Salvar
+                gravata</button>
+              <button type="button" class="btn btn-danger btn-block" data-dismiss="modal"><i
+                  class="fas fa-window-close"></i> Cancelar</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="itens_locacao" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header ">
+              <h5 class="modal-title text-center">Locações</h5>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <table class="table table-bordered table-hover" id="locacoes">
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger btn-block" data-dismiss="modal"><i
+                  class="fas fa-window-close"></i> Voltar</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getData(event) {
+
+      const codigo = event.id
+
+      const URL = 'http://localhost:3000/itenLocacao/' + codigo;
+      let trHTML = '';
+
+      console.log(codigo)
+
+      fetch(URL)
+        .then((body) => body.json())
+        .then((data) => {
+
+          console.log(data);
+          data.forEach(locacao => {
+
+            const date_prova = new Date(locacao.data_prova);
+            const dateProvaFormat = moment(date_prova).format('DD/MM/YYYY HH:mm:ss');
+
+            const date_retira = new Date(locacao.data_retira);
+            const dateRetiraFormat = moment(date_retira).format('DD/MM/YYYY HH:mm:ss');
+
+            const date_devolve = new Date(locacao.data_devolve);
+            const dateDevolveFormat = moment(date_devolve).format('DD/MM/YYYY HH:mm:ss');
+     
+            trHTML +=
+              `<thead class="table-dark bg-primary">
+                  <th>Codigo</th>
+                  <th>Cliente</th>
+                  <th>Data de Prova</th>
+                  <th>Data de Retirada</th>
+                  <th>Data de Devolução</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      ${locacao.id}
+                    </td>
+                    <td>
+                      ${locacao.cliente}
+                    </td>
+                    <td>
+                      ${dateProvaFormat}
+                    </td>
+                    <td>
+                      ${dateRetiraFormat}
+                    </td>
+                    <td>
+                      ${dateDevolveFormat}
+                    </td>
+                    </tr>
+                    
+                </tbody>`
+          })
+          $('#locacoes').html(trHTML);
+          trHTML = '';
+        })
+        .catch((error) => console.error('Erro:', error.message || error))
+    };
+
+    var totalItens;
+
+    function loadMais(loadMore, offset) {
+
+      let tr = '';
+      loadMore.preventDefault();
+
+      let tipo = "gravata"
+
+      let URL = `http://localhost:3000/buscar-pecas/?tipo=${tipo}&offset=${offset}`
+
+      fetch(URL)
+
+        .then((body) => body.json())
+        .then((data) => {
+          console.log(data)
+          data.data.forEach(gravata => {
+
+            let compraFormat = new Intl.NumberFormat('br-PT', {
+              style: 'currency',
+              currency: 'BRL'
+            }).format(gravata.valor_compra);
+
+            let aluguelFormat = new Intl.NumberFormat('br-PT', {
+              style: 'currency',
+              currency: 'BRL'
+            }).format(gravata.valor_aluguel);
+
+            let promocaoFormat = new Intl.NumberFormat('br-PT', {
+              style: 'currency',
+              currency: 'BRL'
+            }).format(gravata.valor_promocao);
+
+            if (gravata.status == 'promoção') {
+              tr = `<tr>
+                          <td class="text-center">${gravata.codigo}
+                            <div>
+                                <span class="badge badge-warning">Promoção</span>
+                                <span class="badge badge-warning">${promocaoFormat}</span>
+                            </div>
+                          </td>
+                          <td class="text-center"><picture><img src="/fotos/gravatas/${gravata.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy"></picture</td>
+                          <td class="text-center">${gravata.tamanho}</td>
+                          <td class="text-center">${aluguelFormat}</td>
+                          <td class="text-center">${compraFormat}</td>
+                          <td class="text-center">${gravata.cor}</td>
+                          <td class="text-center status">${gravata.status}</td>
+                          <td class="text-center">
+                              <div><button class="btn btn-primary"><a class="text-white" href="/gravatas/update/${ gravata.codigo}">Editar</a></button></div>
+                                <p>
+                              <div><button class="btn btn-danger"><a class="text-white" href="/gravatas/delete/${gravata.codigo}">Excluir</a></button></div>
+                                <p>
+                              <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${gravata.codigo}">Locações</button>
+                                <p>
+                              </div>
+                          </td>
+                        </tr>`
+
+            } else {
+              tr = `<tr>
+                          <td class="text-center">
+                            ${gravata.codigo}
+                          </td>
+                          <td><picture><img src="/fotos/gravatas/${gravata.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy"> </picture</td>
+                          <td class="text-center">${gravata.tamanho}</td>
+                          <td class="text-center">${aluguelFormat}</td>
+                          <td class="text-center">${compraFormat}</td>
+                          <td class="text-center">${gravata.cor}</td>
+                          <td class="text-center status">${gravata.status}</td>
+                          <td class="text-center">
+                              <div><button class="btn btn-primary"><a class="text-white" href="/gravatas/update/${ gravata.codigo}">Editar</a></button></div>
+                                <p>
+                              <div><button class="btn btn-danger"><a class="text-white" href="/gravatas/delete/${gravata.codigo}">Excluir</a></button></div>
+                                <p>
+                              <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${gravata.codigo}">Locações</button>
+                                <p>
+                              </div>
+                          </td>
+                        </tr>`
+            }
+
+            if(gravata.status == 'vendido') {
+              tr = `<tr>
+                          <td class="text-center">
+                            ${gravata.codigo}
+                            <div><span class="badge badge-danger">Vendido</span></div>
+                          </td>
+                          <td><picture><img src="/fotos/gravatas/${gravata.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy"> </picture</td>
+                          <td class="text-center">${gravata.tamanho}</td>
+                          <td class="text-center">${aluguelFormat}</td>
+                          <td class="text-center">${compraFormat}</td>
+                          <td class="text-center">${gravata.cor}</td>
+                          <td class="text-center status">${gravata.status}</td>
+                          <td class="text-center">
+                              <div><button class="btn btn-primary"><a class="text-white" href="/gravatas/update/${ gravata.codigo}">Editar</a></button></div>
+                                <p>
+                              <div><button class="btn btn-danger"><a class="text-white" href="/gravatas/delete/${gravata.codigo}">Excluir</a></button></div>
+                                <p>
+                              <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${gravata.codigo}">Locações</button>
+                                <p>
+                              </div>
+                          </td>
+                        </tr>`
+
+            }
+
+
+            $('#gravatas').append(tr)
+            tr = '';
+          })
+          console.log(data)
+          totalItens = data.totalItens;
+        })
+        .catch((error) => console.error('Erro:', error.message || error));
+    }
+
+
+    const load = document.querySelector('#load');
+
+    let offset = 10;
+
+    window.addEventListener('load', loadMore => {
+      loadMais(loadMore, 0)
+    })
+
+    load.addEventListener('click', loadMore => {
+      if (offset < totalItens) {
+        loadMais(loadMore, offset)
+        offset += 10;
+      }
+      if (offset > totalItens) {
+
+        document.getElementById("load").disabled = true;
+
+      }
+
+
+
+    });
+  </script>
+
+<%- include('partials/_footer') %>

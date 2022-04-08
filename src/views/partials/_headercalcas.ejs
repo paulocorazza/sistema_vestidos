@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sua Loja</title>
+  <!-- NAVIGATION -->
+  <script src="https://kit.fontawesome.com/bf4bc90827.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
+  <link rel="stylesheet" href="/fullcalendar-5.5.1/lib/main.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/lux/bootstrap.min.css  ">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body>
+  <!-- navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand">Sua Loja</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+      aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/agenda">Agenda
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/locacoes">Locações</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/vestidos">vestidos</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">Outras Peças</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/bolsas">Bolsas</a>
+            <a class="dropdown-item" href="/calcas">Calças</a>
+            <a class="dropdown-item" href="/camisas">Camisas</a>
+            <a class="dropdown-item" href="/Coletes">Coletes</a>
+            <a class="dropdown-item" href="/paletos">Paletós</a>
+            <a class="dropdown-item" href="/gravatas">Gravatas</a>
+            <a class="dropdown-item" href="/sapatos">Sapatos</a>
+            <a class="dropdown-item" href="/conjuntos">Conjuntos</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0" id="pesquisa">
+        <input class="form-control mr-sm-2" type="text" placeholder="Procure pelo código da peça" id="search">
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit" data-toggle="modal"
+          data-target="#itens_pesquisa">Procurar</button> -->
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Procurar</button>
+      </form>
+    </div>
+
+    <div class="modal fade" id="itens_pesquisa">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Pesquisa</h4>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <table class="table table-bordered table-hover table-sm" id="resultado">
+            </table>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="itens_locacao" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header ">
+            <h5 class="modal-title text-center">Locações</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <table class="table table-bordered table-hover" id="locacoes">
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal"><i
+                class="fas fa-window-close"></i> Voltar</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  <script>
+    const form = document.getElementById('pesquisa');
+
+    form.addEventListener("submit", search);
+
+    function search(event) {
+
+      event.preventDefault()
+
+      const peca = document.getElementById('search').value;
+      const codigo = peca;
+
+
+
+      const URL = `http://localhost:3000/pesquisa/calca/` + codigo;
+      let trHTML = '';
+
+      fetch(URL)
+        .then((body) => body.json())
+        .then((data) => {
+
+          if (data.length > 0) {
+
+            $('#itens_pesquisa').modal('show');
+
+            data.forEach(item => {
+
+              let tipo = item.tipo;
+
+              let compraFormat = new Intl.NumberFormat('br-PT', {
+                style: 'currency',
+                currency: 'BRL'
+              }).format(item.valor_compra);
+
+              let aluguelFormat = new Intl.NumberFormat('br-PT', {
+                style: 'currency',
+                currency: 'BRL'
+              }).format(item.valor_aluguel);
+
+              if (item.status == 'promoção') {
+
+
+                trHTML +=
+                  `<thead class="table-dark bg-primary">
+                    <th class="text-center">Codigo</th>
+                    <th class="text-center">Foto</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Cor</th>
+                    <th class="text-center">Valor Aluguel</th>
+                    <th class="text-center">Valor Compra</th>
+                    <th class="text-center">Tamanho</th>
+                    <th class="text-center">Açōes</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-center">
+                          ${item.codigo}
+                          <p><span class="badge badge-danger">Promoção</span>
+                        </td>
+                        <td><picture><img src="/fotos/${tipo}s/${item.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy" </picture</td>
+                        
+                        <td class="text-center">
+                          ${item.status}
+                        </td>
+                        <td class="text-center">
+                          ${item.cor}
+                        </td>
+                        <td class="text-center">
+                          ${aluguelFormat}
+                        </td>
+                        <td class="text-center">
+                          ${compraFormat}
+                        </td>
+                        <td class="text-center">
+                          ${item.tamanho}
+                        </td>
+                        <td class="text-center">
+                                  <div><button class="btn btn-primary"><a class="text-white" href="/${tipo}s/update/${ item.codigo}">Editar</a></button></div>
+                                    <p>
+                                      <div><button class="btn btn-danger"><a class="text-white" href="/${tipo}s/delete/${item.codigo}">Excluir</a></button></div>
+                                    <p>
+                                      <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${item.codigo}">Locações</button>
+                                    <p>
+                                  </div>
+                              </td>
+                      </tr>
+                    </tbody>`
+
+              } else if (item.tipo == 'paleto') {
+                trHTML +=
+                  `<thead class="table-dark bg-primary">
+                      <th class="text-center">Codigo</th>
+                      <th class="text-center">Foto</th>
+                      <th class="text-center">Status</th>
+                      <th class="text-center">Cor</th>
+                      <th class="text-center">Qualidade</th>
+                      <th class="text-center">Valor Aluguel</th>
+                      <th class="text-center">Valor Compra</th>
+                      <th class="text-center">Tamanho</th>
+                      <th class="text-center">Açōes</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-center">
+                          ${item.codigo}
+                        </td>
+                        <td><picture><img src="/fotos/${tipo}s/${item.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy" </picture</td>
+                        <td class="text-center">
+                          ${item.status}
+                        </td>
+                        <td class="text-center">
+                          ${item.cor}
+                        </td>
+                        <td class="text-center">
+                          ${item.qualidade}
+                        </td>
+                        <td class="text-center">
+                          ${aluguelFormat}
+                        </td>
+                        <td class="text-center">
+                          ${compraFormat}
+                        </td>
+                        <td class="text-center">
+                          ${item.tamanho}
+                        </td>
+                        <td class="text-center">
+                                  <div><button class="btn btn-primary"><a class="text-white" href="/${tipo}s/update/${ item.codigo}">Editar</a></button></div>
+                                    <p>
+                                  <div><button class="btn btn-danger"><a class="text-white" href="/${tipo}s/delete/${item.codigo}">Excluir</a></button></div>
+                                    <p>
+                                  <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${item.codigo}">Locações</button>
+                                    <p>
+                                  </div>
+                              </td>
+                        </tr>
+                        <p>
+                    </tbody>`
+
+              } else {
+
+                trHTML +=
+                  `<thead class="table-dark bg-primary">
+                  <th class="text-center">Codigo</th>
+                  <th class="text-center">Foto</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Cor</th>
+                  <th class="text-center">Valor Aluguel</th>
+                  <th class="text-center">Valor Compra</th>
+                  <th class="text-center">Tamanho</th>
+                  <th class="text-center">Açōes</th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-center">
+                      ${item.codigo}
+                    </td>
+                    <td><picture><img src="/fotos/${tipo}s/${item.foto}" class="img-fluid" style="height: 200px; width: 250px;" loading="lazy" </picture</td>
+                    <td class="text-center">
+                      ${item.status}
+                    </td>
+                    <td class="text-center">
+                      ${item.cor}
+                    </td>
+                    <td class="text-center">
+                      ${aluguelFormat}
+                    </td>
+                    <td class="text-center">
+                      ${compraFormat}
+                    </td>
+                    <td class="text-center">
+                      ${item.tamanho}
+                    </td>
+                    <td class="text-center">
+                              <div><button class="btn btn-primary"><a class="text-white" href="/${tipo}s/update/${ item.codigo}">Editar</a></button></div>
+                                <p>
+                              <div><button class="btn btn-danger"><a class="text-white" href="/${tipo}s/delete/${item.codigo}">Excluir</a></button></div>
+                                <p>
+                              <div><button class="btn btn-warning" data-toggle="modal" data-target="#itens_locacao" onclick="getData(this)" id="${item.codigo}">Locações</button>
+                                <p>
+                              </div>
+                          </td>
+                    </tr>
+                    <p>
+                </tbody>`
+
+              }
+            })
+            $('#resultado').html(trHTML);
+            trHTML = '';
+          } else {
+
+            $('#itens_pesquisa').modal('hide');
+
+            Swal.fire({
+              icon: 'warning',
+              title: 'Oops...',
+              text: 'Não existe nenhum vestido com esse código ainda!'
+            })
+
+            peca.value = '';
+          }
+
+        })
+        .catch((error) => console.error('Erro:', error.message || error))
+    }
+
+    function getData(event) {
+
+      const codigo = event.id
+
+      const URL = 'http://localhost:3000/itenLocacao/' + codigo;
+      let trHTML = '';
+
+      console.log(codigo)
+
+      fetch(URL)
+        .then((body) => body.json())
+        .then((data) => {
+          data.forEach(locacao => {
+
+            const dateProva = new Date(locacao.data_prova);
+            const dateProvaFormat = moment(dateProva).format('DD/MM/YYYY hh:ss');
+            const dateRetira = new Date(locacao.data_retira);
+            const dateRetiraFormat = moment(dateRetira).format('DD/MM/YYYY hh:ss');
+            const dateDevolve = new Date(locacao.data_devolve);
+            const dateDevolveFormat = moment(dateDevolve).format('DD/MM/YYYY hh:ss');
+
+
+            trHTML +=
+              `<thead class="table-dark bg-primary">
+            <th>Codigo</th>
+            <th>Cliente</th>
+            <th>Data de Prova</th>
+            <th>Data de Retirada</th>
+            <th>Data de Devolução</th>
+          </thead>
+          <tbody>
+            <tr>
+                <td>
+                  ${locacao.id}
+                </td>
+
+                <td>
+                  ${locacao.cliente}
+                </td>
+
+                <td>
+                  ${dateProvaFormat}
+                </td>
+
+                <td>
+                  ${dateRetiraFormat}
+                </td>
+
+                <td>
+                  ${dateDevolveFormat}
+                </td>
+              </tr>
+          </tbody>`
+          })
+          $('#locacoes').html(trHTML);
+          trHTML = '';
+        })
+        .catch((error) => console.error('Erro:', error.message || error))
+    };
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+    integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+    crossorigin="anonymous"></script>
+
+
+  <script src="/fullcalendar-5.5.1/lib/main.min.js"></script>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>

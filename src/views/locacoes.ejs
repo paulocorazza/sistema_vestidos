@@ -1,0 +1,506 @@
+<%- include('partials/_headerlocacoes') %>
+
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#add_locacoes">Nova
+                Locação</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Locacões</h1>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Lembre-se!</strong> Você deve excluir as peças antes de excluir a locação.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <% if (data) { %>
+            <% for (var i = 0; i < data.length; i++) { %>
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;">Código</td>
+                    <td class="text-center"><%= data[i].id %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-users"></i> Cliente</td>
+                    <td class="text-center"><%= data[i].cliente %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-map-marked-alt"></i>
+                        Endereço</td>
+                    <td class="text-center"><%= data[i].endereco %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-phone"></i> Telefone</td>
+                    <td class="text-center"><%= data[i].telefone %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-calendar-alt"></i> Data
+                        Prova</td>
+                    <td class="text-center prova"><%= data[i].prova%></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-calendar-alt"></i> Data
+                        Retira</td>
+                    <td class="text-center retira"><%= data[i].retira %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-calendar-alt"></i> Data
+                        Devolve</td>
+                    <td class="text-center devolve"><%= data[i].devolve %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-money-bill-alt"></i> Total
+                        R$</td>
+                    <td class="text-center moeda"> <%= data[i].total %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-money-bill-alt"></i> Sinal
+                        R$</td>
+                    <td class="text-center moeda"><%= data[i].sinal %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary" style="width: 25px;"><i class="fas fa-money-bill-alt"></i>
+                        Restante
+                        R$</td>
+                    <td class="text-center moeda"> <%= data[i].restante %></td>
+                </tr>
+                <tr>
+                    <td class="table-dark bg-primary"><i class="fas fa-edit"></i> Ações </td>
+                    <td class="text-center">
+                        <button class="btn btn-warning">
+                            <a class="text-white" href="/locacoes/update/<%= data[i].id %>"> Editar</a>
+                        </button>
+                        <button class="btn btn-danger excluir"><a class="text-white"
+                                href="/locacoes/delete/<%= data[i].id %>">
+                                Excluir</a>
+                        </button>
+                        <button class="btn btn-primary">
+                            <a class="text-white" href="locacoes/items-locacao/<%= data[i].id %>">
+                                Ver peças
+                            </a>
+                        </button>
+                        <button class="btn btn-success" onclick="openFormPecas(this);" id="<%=data[i].id%>">
+                            Adicionar Peças
+                        </button>
+                        <button class="btn btn-outline-danger"><a class="text-center"
+                                href="/locacoes/items-locacao/delete/<%=data[i].id%>">Excluir Peças</a></button>
+                    </td>
+                </tr>
+                <h4 class="text-center"> O nome da sua loja pode aparecer aqui</h4>
+                <% }  %>
+                <% } %>
+            </table>
+
+
+            <div class="modal fade" tabindex="-1" role="dialog" id="add_peca_locacao">
+                <form id="form_add_pecas_locacao">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title locacao"></h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" id="id_locacao_form" name="id" value="">
+                                    <label for="codigo">Código da peça:</label>
+                                    <input type="text" id="peca_codigo" class="form-control" name="codigo" required>
+                                </div>
+                                <p></p>
+                                <div class="form-group">
+                                    <label for="codigo">Descrição da peça:</label>
+                                    <input type="text" class="form-control" name="descricao" required id="descrica_codigo">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success btn-block"
+                                    onclick="save_pecas_locacao();">Adicionar</button>
+                                <button type="button" class="btn btn-danger btn-block"
+                                    data-dismiss="modal">Fechar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="add_locacoes" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <h5 class="modal-title text-center">Adicionar nova Locação</h5>
+            </div>
+            <div class="modal-body">
+                <form id="save_location" method="POST" style="border-style:solid; padding: 5%;">
+
+                    <div class="form-group">
+                        <input type="hidden" id="next_id" name="id" value="">
+                        <label for="endereço">Cliente</label>
+                        <input type="text" name="cliente" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereço">Endereço</label>
+                        <input type="text" name="endereco" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereço">Telefone</label>
+                        <input type="text" name="telefone" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dados-prova">Data de prova</label>
+                        <input type="datetime-local" name="data_prova" id="prova" class="form-control" required
+                            onfocusout="validaDataProva(event)">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="endereço">Data Retirada</label>
+                        <input type="datetime-local" name="data_retira" id="retira" class="form-control" required
+                            onfocusout="validaDataRetira(event)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endereço">Data Devolução</label>
+                        <input type="date" name="data_devolve" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor_aluguel">Valor Total</label>
+                        <class class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" name="total" id="total" placeholder="Digite o valor total da locação"
+                                class="form-control" required>
+                        </class>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor_aluguel">Valor Sinal</label>
+                        <class class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" name="sinal" id="sinal" placeholder="Digite o valor do sinal"
+                                class="form-control" onfocusout="calcula(event);" required>
+                        </class>
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_aluguel">Valor Restante</label>
+                        <class class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" name="restante" id="restante" class="form-control" required>
+                        </class>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success btn-block" id="salvar"
+                            onclick="getNextId(event);">Salvar
+                            Locação</button>
+                    </div>
+                </form>
+                <p></p>
+                <div class="form-group" style="border-style:solid; padding: 5%;">
+                    <form id="locacao_itens">
+
+                        <h5 class="modal-title text-center">Adicionar Peças</h5>
+
+                        <input type="hidden" id="proximo_id" name="id" value="">
+
+                        <label for="código">Código</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" required></input>
+
+                        <label for="código">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" id="descricao"></input>
+                        <p></p>
+                        <button class="btn btn-primary btn-block" type="submit" id="add_items"
+                            disabled>Adicionar</button>
+                        <p></p>
+                    </form>
+                    <p></p>
+                    <table class="table table-stripped" id="itens_locacao_tbl">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">Código</th>
+                                <th scope="col" class="text-center">Descrição</th>
+                                <th scope="col" class="text-center"><button class="deleteBtn"
+                                        style="background-color: red; color: white;  border-radius: 12px;">
+                                        Excluir Items</button> </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" id="items_da_locacao">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-block" data-dismiss="modal"
+                    onclick="reload();">Finalizar</button>
+
+                <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+
+
+    function openFormPecas(event) {
+        $('#add_peca_locacao').modal('show');
+        let codigo_locacao = document.getElementById('id_locacao_form');
+        const locacao_identificacao = event.id
+        codigo_locacao.value = locacao_identificacao;
+        $('.locacao').html('Adicionar peça locação ' + locacao_identificacao);
+    }
+
+    function save_pecas_locacao() {
+        let peca_codigo = document.getElementById('peca_codigo').value
+        let descricao_codigo = document.getElementById('descricao_codigo');
+        const URL = `http://localhost:3000/locacoes/pecas/${peca_codigo}`;
+        console.log('o código da peças é ' + peca_codigo);
+        fetch(URL)
+            .then((body) => body.json())
+            .then((data) => {
+                console.log('data é: ' + data)
+                if (data.length > 0) {
+                    var dados = $('#form_add_pecas_locacao').serialize();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: 'locacoes/add-item-location',
+                        async: true,
+                        data: dados,
+                        success: function (response) {
+                            location.reload();
+                        }
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso!',
+                        text: 'Esse código de peça foi adicionado!'
+                    })
+
+                    $('#add_peca_locacao').modal('hide');
+                    peca_codigo.value = '';
+                    descricao_codigo.value = '';
+                    return true;
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Esse código de peça não existe ainda, digite outro!'
+                    })
+                }
+            });
+    }
+
+
+
+
+
+
+
+    const form_items = document.getElementById("locacao_itens");
+    const tbodyEl = document.getElementById("items_da_locacao");
+    const tableEl = document.getElementById("itens_locacao_tbl");
+
+    function onAddRow(e) {
+        e.preventDefault();
+        const id_da_locacao = document.getElementById('next_id').value;
+        const item_codigo = document.getElementById("codigo").value;
+        const item_descricao = document.getElementById("descricao").value;
+        const URL = `http://localhost:3000/locacoes/pecas/${item_codigo}`;
+        fetch(URL)
+            .then((body) => body.json())
+            .then((data) => {
+                if (data.length > 0) {
+                    var dados = $('#locacao_itens').serialize();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: 'locacoes/add-item-location',
+                        async: true,
+                        data: dados,
+                        success: function (response) {
+                            location.reload();
+                        }
+                    });
+                    tbodyEl.innerHTML += `
+                        <tr class="text-center">
+                            
+                            <td>${item_codigo}</td>
+                            <td>${item_descricao}</td>
+                        
+                        </tr>
+                    `;
+                    return true;
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Esse código de peça não existe ainda, digite outro!'
+                    })
+                }
+            });
+    }
+
+    function onDeleteRow(e) {
+        if (!e.target.classList.contains("deleteBtn")) {
+            return;
+        }
+        //let peca_codigo = document.getElementById('codigo').value;
+        let locacao_id = document.getElementById('next_id').value;
+        const URL = `locacoes/items-locacao/delete/${locacao_id}`;
+        $.ajax({
+            url: URL,
+            type: 'GET',
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sucesso',
+                    text: 'Items excluídos com sucesso!'
+                })
+            }
+        });
+        const btn = e.target;
+        //btn.closest("tr").remove();
+        $("#items_da_locacao tr").remove();
+    }
+    form_items.addEventListener("submit", onAddRow);
+    tableEl.addEventListener("click", onDeleteRow);
+    const URL = 'http://localhost:3000/locacoes/atualiza-banco';
+    fetch(URL)
+        .then((body) => body.json())
+        .then((data) => {})
+
+    function getNextId() {
+        event.preventDefault();
+        const URL = 'http://localhost:3000/locacoes/get-next-id';
+        fetch(URL)
+            .then((body) => body.json())
+            .then((data) => {
+                let next_id = document.getElementById('next_id');
+                let id_locacao = data[0].AUTO_INCREMENT;
+                $("#next_id").val(id_locacao);
+                $("#proximo_id").val(id_locacao);
+                var dados = $('#save_location').serialize();
+                $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: 'locacoes/add-locacao',
+                        async: true,
+                        data: dados,
+                        success: function (response) {
+                            location.reload();
+                        }
+                    },
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso',
+                        text: 'Locação cadastrada com sucesso!, abaixo vamos inserir as peças!',
+                    }));
+                document.getElementById("add_items").disabled = false;
+                return false;
+            })
+            .catch((error) => console.error('Erro:', error.message || error))
+    }
+
+    function reload() {
+        window.location.reload();
+    }
+
+    function validaDataProva() {
+        event.preventDefault();
+        const data_prova = document.getElementById('prova').value;
+        const data_prova_nova = new Date(data_prova)
+        const data_prova_format = moment(data_prova_nova).format('YYYY-MM-DD HH:mm');
+        console.log('a data digitada e :' + data_prova_format)
+        const URL = `http://localhost:3000/locacoes/get-data-prova/${data_prova_format}`;
+        fetch(URL)
+            .then((body) => body.json())
+            .then((data) => {
+                console.log(data);
+                if (data.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Já existe compromisso com essa data, selecione outra!'
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso',
+                        text: 'Essa data está disponível'
+                    })
+                }
+            })
+            .catch((error) => console.error('Erro:', error.message || error))
+    }
+
+    function validaDataRetira() {
+        event.preventDefault();
+        const data_retira = document.getElementById('retira').value;
+        const data_retira_nova = new Date(data_retira)
+        const data_retira_format = moment(data_retira_nova).format('YYYY-MM-DD HH:mm');
+        console.log('a data digitada e :' + data_retira_format)
+        const URL = `http://localhost:3000/locacoes/get-data-retira/${data_retira_format}`;
+        console.log(URL);
+        fetch(URL)
+            .then((body) => body.json())
+            .then((data) => {
+                if (data.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Já existe compromisso com essa data, selecione outra!'
+                    })
+                    codigo.value = '';
+                    descricao.value = '';
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sucesso',
+                        text: 'Essa data está disponível'
+                    })
+                }
+            })
+            .catch((error) => console.error('Erro:', error.message || error))
+    }
+    let total = document.getElementById('total');
+    let sinal = document.getElementById('sinal');
+    let restante = document.getElementById('restante');
+
+    function calcula() {
+        event.preventDefault();
+        let valorTotal = total.value;
+        let valorSinal = sinal.value;
+        let valorRestante = valorTotal - valorSinal;
+        restante.value = valorRestante;
+    }
+</script>
+
+
+
+
+
+
+<%- include('partials/_footer') %>

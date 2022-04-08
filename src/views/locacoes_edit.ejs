@@ -1,0 +1,110 @@
+<%- include('partials/_header') %>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="card border-primary">
+                <div class="card-header text-center">
+                    <h1>Atualizar Locação</h1>
+                </div>
+                <div class="card-body border-primary">
+                    <form action="/locacoes/update/<%=data.id%>" method="POST">
+
+                        <div class="form-group">
+                            <i class="fas fa-users"></i>
+                            <label for="cliente">Cliente:</label>
+                            <input type="text" name="cliente" value="<%= data.cliente%>" class="form-control" autofocus
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <label for="endereco">Endereço:</label>
+                            <input type="text" name="endereco" value="<%= data.endereco%>" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-phone"></i>
+                            <label for="telefone">Telefone:</label>
+                            <input type="text" name="telefone" value="<%= data.telefone%>" class="form-control"
+                                autofocus required>
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-calendar-alt"></i>
+                            <label for="dataprova">Data prova:</label>
+                            <input type="datetime" class="form-control" name="data_prova" id="data_prova" value="<%= data.data_prova %>">
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <i class="fas fa-calendar-alt"></i>
+                            <label for="retira">Data Retira:</label>
+                            <input type="datetime" name="data_retira" value="<%= data.data_retira %>" class="form-control">
+
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-calendar-alt"></i>
+                            <label for="devolve">Data devolve:</label>
+                            <input type="date" name="data_devolve" id="devolve" value="<%= data.data_devolve %>"
+                                class="form-control">
+
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-money-bill-alt"></i>
+                            <label for="total">Valor Total</label>
+                            <class class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">R$</span>
+                                </div>
+                                <input type="number" name="total" value="<%= data.total%>" class="form-control"
+                                    required>
+                            </class>
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-money-bill-alt"></i>
+                            <label for="sinal">Valor do Sinal</label>
+                            <class class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">R$</span>
+                                </div>
+                                <input type="number" name="sinal" placeholder="Digite o valor de aluguel"
+                                    value="<%= data.sinal%>" class="form-control" required>
+                            </class>
+                        </div>
+
+                        <div class="form-group">
+                            <i class="fas fa-money-bill-alt"></i>
+                            <label for="restante">Valor Restante</label>
+                            <class class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">R$</span>
+                                </div>
+                                <input type="number" name="restante" value="<%= data.restante%>" class="form-control"
+                                    required>
+                            </class>
+                        </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-block"><i class="far fa-save"></i> Salvar
+                        Locação</button>
+                    <a href="/locacoes" class="btn btn-warning btn-block">Voltar</a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<%- include('partials/_footer') %>

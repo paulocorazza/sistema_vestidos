@@ -1,0 +1,61 @@
+
+</body>
+<p></p>
+<% if(data) { %>
+<footer>
+    <div class="container">
+        <div class="text-center">Copyright © 2020-2021 - Corazza Soluções em TI - Cabreúva - SP
+            <div class="row small text-center">
+                <div class="col-md-12">
+                    <p class="text-danger" >Para suporte entre em contato por email:<a href="mailto:paulo@corazzati.com.br" >paulo@corazzati.com.br</a> ou pelo whatsapp: <a href="http://api.whatsapp.com/send?1=pt_BR&phone=5511972813500" >(11)97281-3500</a>
+                    <p class="text-danger">O nome da sua loja aqui - Versão 1.1</p></p>
+                </div>
+            </div> 
+            <hr class="divider my-6"/>
+        </div>
+   
+        <script>
+            var button = document.getElementById("top");
+
+            window.onscroll = function () {
+                scrollFunction()
+            };
+
+            function scrollFunction() {
+                if (document.body.scrollTop < 20 || document.documentElement.scrollTop > 20) {
+                    button.style.display = "block";
+                } else {
+                    button.style.display = "none";
+                }
+            }
+
+            function toTheTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
+    </div>
+    <button class="btn btn-info text-center" onclick="toTheTop()" id="top" style="float: right; margin-bottom: 10px;position:fixed;
+    width:110px;
+    bottom:40px;
+    right:40px;
+    border-radius:30px;
+    text-align:center;" >Voltar ao topo</button>
+</footer>
+<% } else { %>
+    <footer>
+        <div class="container">
+            <div class="text-center">Copyright © 2020-2021 - Corazza Soluções em TI - Cabreúva - SP
+                <div class="row small text-center">
+                    <div class="col-md-12">
+                        <p class="text-danger" >Para suporte entre em contato por email:<a href="mailto:paulo@corazzati.com.br" >paulo@corazzati.com.br</a> ou pelo whatsapp: <a href="http://api.whatsapp.com/send?1=pt_BR&phone=5511972813500" >(11)97281-3500</a>
+                        <p class="text-danger">O nome da sua loja aqui - Versão 1.1</p></p>
+                    </div>
+                </div> 
+                <hr class="divider my-6"/>
+            </div>
+        </div>
+    </footer>
+    <% } %>
+
+</html>

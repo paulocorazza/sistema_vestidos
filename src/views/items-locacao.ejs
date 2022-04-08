@@ -1,0 +1,60 @@
+<%- include('partials/_headerlocacoes') %>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <p></p>
+            <button class="btn btn-primary"><a href="/locacoes" class="text-white">Voltar</a></button>
+            <h1 class="text-center" id="id_da_locacao"></h1>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark bg-primary">
+                    <tr>
+                        <th class="text-center"><i class="fas fa-id-card"></i> Código</th>
+                        <th class="text-center"><i class="fas fa-info"></i> Descrição</th>
+                        <th class="text-center"><i class="fas fa-edit"></i> Ações</th>
+                    </tr>
+                </thead>
+                <% if (data) { %>
+
+                <% for (var i = 0; i < data.length; i++) { %>
+                <input type="hidden" id="codigo_da_locacao" value="<%= data[i].id %>">
+                <tbody>
+
+
+                    <td class="text-center"><%= data[i].codigo %></td>
+                    <td class="text-center"><%= data[i].descricao %></td>
+                    <td class="text-center">
+                        <button class="btn btn-danger"><a class="text-center text-white"
+                                href="/locacoes/items-locacao/delete/<%= data[i].id %>/<%= data[i].codigo %>">Excluir</a></button>
+                    </td>
+
+                </tbody>
+                <% } %>
+                <% } %>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+const url = window.location.pathname;
+const id_da_locacao = url.replace(/[^0-9]/g, '');
+const id = document.getElementById('id_da_locacao');
+id.innerHTML = 'Locação ' + id_da_locacao;
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+<%- include('partials/_footer') %>
